@@ -24,8 +24,8 @@ class Encoder(nn.Module):
 
     @nn.compact
     def __call__(self, x):
-        x = nn.Conv(self.n_filters // 4, (4, 4), strides=(2, 2), padding='SAME')(x)
         x = nn.Conv(self.n_filters // 2, (4, 4), strides=(2, 2), padding='SAME')(x)
+        x = nn.Conv(self.n_filters, (4, 4), strides=(2, 2), padding='SAME')(x)
 
         x = ResidualBlock()(x)
         x = ResidualBlock()(x)
@@ -94,3 +94,8 @@ class VQVAE(nn.Module):
             return x, loss
         else:
             return x
+
+
+if __name__ == '__main__':
+    vqvae = VQVAE(128, 32, 512)
+    print(vqvae.tabulate(jax.random.PRNGKey(0), jnp.ones((16, 28, 28, 1))))
